@@ -6,6 +6,10 @@ const {
   update,
   remove,
   search,
+  getAllNam,
+   getAllNu,
+    getAllDoi,
+    Filter,
 } = require("../controllers/sanPhamController");
 const router = express.Router();
 
@@ -27,7 +31,7 @@ const router = express.Router();
  *           type: string
  *         tenSP:
  *           type: string
- *         ma_CTDM:
+ *         maDM:
  *           type: string
  *         Thuonghieu:
  *           type: string
@@ -189,10 +193,16 @@ router.delete("/sanpham/delete/:id", remove);
  *     parameters:
  *       - in: query
  *         name: q
- *         required: true
+ *         required: false
  *         schema:
  *           type: string
  *         description: Từ khóa tìm kiếm
+ *       - in: query
+ *         name: categoryId
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: ID danh mục để lọc sản phẩm
  *     responses:
  *       200:
  *         description: Danh sách sản phẩm tìm được
@@ -204,5 +214,8 @@ router.delete("/sanpham/delete/:id", remove);
  *                 $ref: '#/components/schemas/SanPham'
  */
 router.get("/sanpham/search", search);
-
+router.get("/sanpham/getallnam", getAllNam);
+router.get("/sanpham/getallnu", getAllNu);
+router.get("/sanpham/getalldoi", getAllDoi);
+router.get("/sanpham/filter", Filter);
 module.exports = router;

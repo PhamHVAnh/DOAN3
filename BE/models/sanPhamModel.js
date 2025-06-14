@@ -11,11 +11,11 @@ const SanPham = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    ma_CTDM: {
+    maDM: {
       type: DataTypes.UUID,
       references: {
-        model: "CT_DanhMuc",
-        key: "ma_CTDM",
+        model: "DanhMuc",
+        key: "maDM",
       },
       allowNull: false,
     },
@@ -85,9 +85,9 @@ const SanPham = sequelize.define(
 );
 
 SanPham.associate = (models) => {
-  SanPham.belongsTo(models.CTDanhMuc, {
-    foreignKey: "ma_CTDM",
-    as: "CTDanhMuc",
+  SanPham.belongsTo(models.DanhMuc, {
+    foreignKey: "maDM",
+    as: "DanhMuc",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });

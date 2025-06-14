@@ -8,7 +8,7 @@ const HoaDonNhap = require("./hoaDonNhapModel");
 const CTHoaDonNhap = require("./ctHoaDonNhapModel");
 const HoaDonBan = require("./hoaDonBanModel");
 const CTHoaDonBan = require("./ctHoaDonBanModel");
-const CTDanhMuc = require("./ctDanhMucModel");
+// const CTDanhMuc = require("./ctDanhMucModel");
 
 const db = {
   DanhMuc,
@@ -20,7 +20,7 @@ const db = {
   CTHoaDonNhap,
   HoaDonBan,
   CTHoaDonBan,
-  CTDanhMuc,
+
 };
 
 // Thiết lập các mối quan hệ

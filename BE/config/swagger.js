@@ -29,30 +29,30 @@ const swaggerOptions = {
         //   type: "object",
         //   required: ["tenDM"],
         //   properties: {
-        //     
+        //
         //     tenDM: {
         //       type: "string",
         //       description: "Tên của DanhMuc",
         //     },
-        //     CTDanhMucs: {
+        //     DanhMucs: {
         //       type: "array",
         //       items: {
-        //         $ref: "#/components/schemas/CTDanhMuc",
+        //         $ref: "#/components/schemas/DanhMuc",
         //       },
         //     },
         //   },
         // },
-        CTDanhMuc: {
+        DanhMuc: {
           type: "object",
-          required: ["tenCTDM", "maDM"],
+          required: ["tenDM", "maDM"],
           properties: {
-            ma_CTDM: {
+            maDM: {
               type: "string",
-              description: "ID của CTDanhMuc",
+              description: "ID của DanhMuc",
             },
-            tenCTDM: {
+            tenDM: {
               type: "string",
-              description: "Tên của CTDanhMuc",
+              description: "Tên của DanhMuc",
             },
             SanPhams: {
               type: "array",
@@ -70,11 +70,11 @@ const swaggerOptions = {
               type: "string",
               description: "ID của SanPham",
             },
-            ma_CTDM: {
+            maDM: {
               type: "string",
-              description: "ID của CTDanhMuc",
+              description: "ID của DanhMuc",
             },
-                       tenSP: {
+            tenSP: {
               type: "string",
               description: "Tên của SanPham",
             },
@@ -266,7 +266,72 @@ const swaggerOptions = {
             },
           },
         },
-        // Thêm các schema khác ở đây
+        HoaDonBan: {
+          type: "object",
+          required: ["ngayBan", "phuongThuc", "maND", "tongTien", "trangThai"],
+          properties: {
+            maHDB: {
+              type: "string",
+              description: "ID của HoaDonBan",
+            },
+            ngayBan: {
+              type: "string",
+              format: "date",
+              description: "Ngày bán của HoaDonBan",
+            },
+            trangThai: {
+              type: "string",
+              description:
+                "Trạng thái của hóa đơn bán (ví dụ: đã thanh toán, đang xử lý...)",
+            },
+            giamGia: {
+              type: "number",
+              description: "Giảm giá áp dụng cho hóa đơn (nếu có)",
+            },
+            tongTien: {
+              type: "number",
+              description: "Tổng tiền của hóa đơn bán",
+            },
+            phuongThuc: {
+              type: "string",
+              description:
+                "Phương thức thanh toán (ví dụ: tiền mặt, chuyển khoản)",
+            },
+            maND: {
+              type: "string",
+              description: "ID của người dùng (khách hàng)",
+            },
+            ghiChu: {
+              type: "string",
+              description: "Ghi chú thêm cho hóa đơn",
+            },
+            CTHoaDonBans: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  maSP: {
+                    type: "string",
+                    description: "ID của sản phẩm",
+                  },
+                  soLuong: {
+                    type: "integer",
+                    description: "Số lượng sản phẩm",
+                  },
+                  donGia: {
+                    type: "number",
+                    description: "Đơn giá của sản phẩm",
+                  },
+                  thanhTien: {
+                    type: "number",
+                    description: "Thành tiền (soLuong * donGia)",
+                  },
+                },
+              },
+            },
+          },
+        },
+        // ///////////////////////////////////
       },
     },
     security: [

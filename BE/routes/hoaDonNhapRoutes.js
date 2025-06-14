@@ -227,8 +227,40 @@ router.delete("/hoadonnhap/delete/:id", remove);
  *         description: Không có tham số tìm kiếm hợp lệ
  */
 router.get("/hoadonnhap/search", search);
+/**
+ * @swagger
+ * /api/cthoadonnhap/getall:
+ *   get:
+ *     tags: [HoaDonNhap]
+ *     responses:
+ *       200:
+ *         description: Danh sách chi tiết hóa đơn bán
+ */
 
 router.get("/cthoadonnhap/getall", getAllCTHDN);
+/**
+ * @swagger
+ * /api/cthoadonnhap/getbyid/{id}:
+ *   get:
+ *     tags: [HoaDonNhap]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the CTHoaDonNhap item
+ *     responses:
+ *       200:
+ *         description: A CTHoaDonNhap item
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CTHoaDonNhap'
+ *       404:
+ *         description: CTHoaDonNhap item not found
+ */
+
 router.get("/cthoadonnhap/getbyid/:id", getByIdCTHDN);
 
 module.exports = router;

@@ -44,7 +44,7 @@ exports.getAllImages = (req, res) => {
 
     // Chỉ lọc file ảnh (jpg, jpeg, png, gif)
     const imageFiles = files.filter((file) =>
-      /\.(jpg|jpeg|png|gif)$/i.test(file)
+      /\.(jpg|jpeg|png|gif|webp)$/i.test(file)
     );
 
     // Trả về đường dẫn ảnh

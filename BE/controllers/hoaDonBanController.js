@@ -307,3 +307,42 @@ exports.search = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+
+
+exports.getByUser = async (req, res) => {
+  try {
+    const { maND } = req.params;
+
+    const hoaDonBans = await HoaDonBan.findAll({
+      where: { maND: maND },
+      include: [
+        // {
+        //   model: NguoiDung,
+        //   as: "NguoiDung",
+        //   attributes: ["tenND", "sdt", "email", "diaChi"],
+        // },
+        {
+          model: CTHoaDonBan,
+          as: "CTHoaDonBans",
+          include: [
+            {
+              model: SanPham,
+              as: "SanPham",
+              attributes: ["tenSP", "anhSP"],
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!hoaDonBans || hoaDonBans.length === 0) {
+      return res.status(404).json({ error: "Không tìm thấy hóa đơn bán của người dùng này" });
+    }
+
+    res.status(200).json(hoaDonBans);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

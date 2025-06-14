@@ -26,7 +26,26 @@ exports.getById = async (req, res) => {
 
 exports.insert = async (req, res) => {
   try {
-    const { tenND, diaChi, ngaySinh, sdt, email, taiKhoan, matKhau } = req.body;
+    let {
+      tenND,
+      diaChi = "",
+      ngaySinh,
+      sdt,
+      email,
+      taiKhoan,
+      matKhau,
+    } = req.body;
+
+    // Nếu ngaySinh không hợp lệ hoặc null, set mặc định 2000-01-01
+    if (!ngaySinh) ngaySinh = new Date("2000-01-01");
+
+    // Nếu sdt không phải số hợp lệ, set mặc định 0 (hoặc thay đổi kiểu dữ liệu)
+    if (!sdt || isNaN(Number(sdt))) sdt = 0;
+
+    if (!tenND || !email || !taiKhoan || !matKhau) {
+      return res.status(400).json({ error: "Thiếu trường bắt buộc" });
+    }
+
     const nguoiDung = await NguoiDung.create({
       tenND,
       diaChi,
@@ -35,14 +54,16 @@ exports.insert = async (req, res) => {
       email,
       taiKhoan,
       matKhau,
-      anhThe: "/uploads/1743347689972.png",
-      maVT: "U11",
+      anhThe: "/uploads/1747723458569.png",
+      maVT: "A01",
     });
+
     res.status(201).json(nguoiDung);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
+
 
 exports.update = async (req, res) => {
   try {

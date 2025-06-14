@@ -1,10 +1,10 @@
-const CTDanhMuc = require("../models/ctDanhMucModel");
+const DanhMuc = require("../models/danhMucModel");
 const SanPham = require("../models/sanPhamModel");
 const { Op } = require("sequelize");
 
-exports.getAllCTDM = async (req, res) => {
+exports.getAllDM = async (req, res) => {
   try {
-    const danhMucCTs = await CTDanhMuc.findAll({
+    const danhMucs = await DanhMuc.findAll({
       include: [
         {
           model: SanPham,
@@ -13,10 +13,10 @@ exports.getAllCTDM = async (req, res) => {
       ],
     });
 
-    const result = danhMucCTs.map((ctdm) => ({
-      ma_CTDM: ctdm.ma_CTDM,
-      tenCTDM: ctdm.tenCTDM,
-      SanPhams: ctdm.SanPhams,
+    const result = danhMucs.map((dm) => ({
+      maDM: dm.maDM,
+      tenDM: dm.tenDM,
+      SanPhams: dm.SanPhams,
     }));
 
     return res.status(200).json(result);
@@ -25,9 +25,9 @@ exports.getAllCTDM = async (req, res) => {
   }
 };
 
-exports.getByIdCTDM = async (req, res) => {
+exports.getByIdDM = async (req, res) => {
   try {
-    const danhMucCT = await CTDanhMuc.findByPk(req.params.id, {
+    const danhMuc = await DanhMuc.findByPk(req.params.id, {
       include: [
         {
           model: SanPham,
@@ -35,11 +35,11 @@ exports.getByIdCTDM = async (req, res) => {
         },
       ],
     });
-    if (danhMucCT) {
+    if (danhMuc) {
       res.status(200).json({
-        ma_CTDM: danhMucCT.ma_CTDM,
-        tenCTDM: danhMucCT.tenCTDM,
-        SanPhams: danhMucCT.SanPhams,
+        maDM: danhMuc.maDM,
+        tenDM: danhMuc.tenDM,
+        SanPhams: danhMuc.SanPhams,
       });
     } else {
       res.status(404).json({ message: "Chi tiết danh mục không tồn tại" });
@@ -51,15 +51,15 @@ exports.getByIdCTDM = async (req, res) => {
 
 exports.insert = async (req, res) => {
   try {
-    const { tenCTDM } = req.body;
+    const { tenDM } = req.body;
 
-    if (!tenCTDM) {
+    if (!tenDM) {
       return res.status(400).json({ error: "Tên chi tiết danh mục là bắt buộc" });
     }
 
-    const chiTietDanhMuc = await CTDanhMuc.create({ tenCTDM });
+    const newDanhMuc = await DanhMuc.create({ tenDM }); // Renamed variable to avoid conflict
 
-    res.status(201).json(chiTietDanhMuc);
+    res.status(201).json(newDanhMuc);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -67,20 +67,20 @@ exports.insert = async (req, res) => {
 
 exports.update = async (req, res) => {
   try {
-    const { ma_CTDM, tenCTDM } = req.body;
+    const { maDM, tenDM } = req.body;
 
-    if (!ma_CTDM) {
+    if (!maDM) {
       return res.status(400).json({ error: "Mã chi tiết danh mục là bắt buộc" });
     }
 
-    const chiTietDanhMuc = await CTDanhMuc.findByPk(ma_CTDM);
-    if (!chiTietDanhMuc) {
+    const existingDanhMuc = await DanhMuc.findByPk(maDM); // Renamed variable to avoid conflict
+    if (!existingDanhMuc) {
       return res.status(404).json({ message: "Chi tiết danh mục không tồn tại" });
     }
 
-    await chiTietDanhMuc.update({ tenCTDM });
+    await existingDanhMuc.update({ tenDM });
 
-    res.status(200).json(chiTietDanhMuc);
+    res.status(200).json(existingDanhMuc);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -90,14 +90,15 @@ exports.remove = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const chiTietDanhMuc = await CTDanhMuc.findByPk(id);
-    if (chiTietDanhMuc) {
-      await chiTietDanhMuc.destroy();
-      return res.status(200).json(chiTietDanhMuc);
+    const danhMuc = await DanhMuc.findByPk(id);  // ✅ sửa tên biến
+    if (danhMuc) {
+      await danhMuc.destroy();  // ✅ gọi destroy trên instance
+      return res.status(200).json({ message: "Xóa thành công" });
     }
 
-    res.status(404).json({ error: "Không tìm thấy chi tiết danh mục" });
+    res.status(404).json({ error: "Không tìm thấy danh mục" });
   } catch (error) {
+    console.error("Lỗi xóa:", error); // để in log
     res.status(400).json({ error: error.message });
   }
 };
@@ -106,16 +107,16 @@ exports.search = async (req, res) => {
   try {
     const { q } = req.query;
 
-    const chiTietDanhMucs = await CTDanhMuc.findAll({
-      where: { tenCTDM: { [Op.like]: `%${q}%` } },
+    const DanhMucs = await DanhMuc.findAll({
+      where: { tenDM: { [Op.like]: `%${q}%` } },
       include: [{ model: SanPham, as: "SanPhams" }],
     });
 
-    if (chiTietDanhMucs.length > 0) {
+    if (DanhMucs.length > 0) {
       return res.status(200).json(
-        chiTietDanhMucs.map((ctdm) => ({
-          ...ctdm.toJSON(),
-          SanPhams: ctdm.SanPhams,
+        DanhMucs.map((dm) => ({
+          ...dm.toJSON(),
+          SanPhams: dm.SanPhams,
         }))
       );
     }
@@ -126,13 +127,13 @@ exports.search = async (req, res) => {
   }
 };
 
-exports.searchCTDMOrSanPham = async (req, res) => {
+exports.searchDMOrSanPham = async (req, res) => {
   try {
     const { q } = req.query;
 
     // 1. Tìm chi tiết danh mục có tên giống từ khóa
-    const chiTietDMs = await CTDanhMuc.findAll({
-      where: { tenCTDM: { [Op.like]: `%${q}%` } },
+    const DMs = await DanhMuc.findAll({
+      where: { tenDM: { [Op.like]: `%${q}%` } },
       include: [
         {
           model: SanPham,
@@ -141,24 +142,24 @@ exports.searchCTDMOrSanPham = async (req, res) => {
       ],
     });
 
-    if (chiTietDMs.length > 0) {
-      const result = chiTietDMs.map((ctdm) => ({
-        ma_CTDM: ctdm.ma_CTDM,
-        tenCTDM: ctdm.tenCTDM,
-        SanPhams: ctdm.SanPhams,
+    if (DMs.length > 0) {
+      const result = DMs.map((dm) => ({
+        maDM: dm.maDM,
+        tenDM: dm.tenDM,
+        SanPhams: dm.SanPhams,
       }));
 
-      return res.status(200).json({ type: "ChiTietDanhMuc", result });
+      return res.status(200).json({ type: "DanhMuc", result });
     }
 
-    // 2. Nếu không có chi tiết, thử tìm sản phẩm
+
     const sanPhams = await SanPham.findAll({
       where: { tenSP: { [Op.like]: `%${q}%` } },
       include: [
         {
-          model: CTDanhMuc,
-          as: "CTDanhMuc",
-          attributes: ["ma_CTDM", "tenCTDM"],
+          model: DanhMuc,
+          as: "DanhMuc",
+          attributes: ["maDM", "tenDM"],
         },
       ],
     });
@@ -178,7 +179,7 @@ exports.searchCTDMOrSanPham = async (req, res) => {
         Chatlieu: sp.Chatlieu, // Chất liệu sản phẩm
         Sizeday: sp.Sizeday, // Size dây sản phẩm
 
-        CTDanhMuc: sp.CTDanhMuc,
+        DanhMuc: sp.DanhMuc,
       }));
 
       return res.status(200).json({ type: "SanPham", result });

@@ -196,7 +196,6 @@ router.get("/nguoidung/search", search);
  * /api/nguoidung/updatepassword:
  *   patch:
  *     tags: [NguoiDung]
- *     summary: Cập nhật mật khẩu người dùng
  *     requestBody:
  *       required: true
  *       content:
